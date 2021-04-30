@@ -99,8 +99,9 @@ __global__ void _kernel(float* a)
     
       
     cudaGetDevice(&d);
+    printf("Kernel %d working\n", d);
     cudaDeviceGetAttribute(&d, cudaDevAttrPciBusId , d);
-    a[i] = a[i] + d;
+    a[i] = a[i] * a[i] + d;
 }
 
 int main()
@@ -126,7 +127,7 @@ int main()
     if (!stream_init(stream))
         return 1;
 
-    const int arraySize = 256;// 1024 * 1024 * 512;   
+    const int arraySize = 2;// 1024 * 1024 * 512;   
     const int sizePerSt = arraySize / num;
 
     /*if (!askAboutMemory(arraySize))
@@ -140,7 +141,7 @@ int main()
         // Проверить что сработает создавать массив из массивов для разных ГПУ
         dev_a = new float*[num];
         for (int j = 0; j < num; j++)
-            dev_a[j] = new float[sizePerSt];
+            dev_a[j] = new float[arraySize];
     }
     /*else
     {
@@ -155,8 +156,8 @@ int main()
     lazzzyArrayPrint(a, arraySize);
 
     //Подготовка к запуску ядра
-    dim3 threads = dim3(100);
-    dim3 blocks = dim3(arraySize / threads.x);
+    dim3 threads = dim3(2);
+    dim3 blocks = dim3(1);
 
     // Подготовка и передач данных на карты
     try {
@@ -179,6 +180,7 @@ int main()
             cudaDeviceSynchronize();
             int d;
             cudaGetDevice(&d);
+            cudaDeviceGetAttribute(&d, cudaDevAttrPciDeviceId, d);
 
             printf("Kernel %d started\n", d);
             _kernel <<<blocks, threads, 0, stream[i]>>> (dev_a[i]);
@@ -193,6 +195,7 @@ int main()
     try {
         for (int i = 0; i < num; i++)
         {
+            delete a;
             cudaSetDevice(i);            
             cudaMemcpy(a, dev_a[i], arraySize * sizeof(float), cudaMemcpyDeviceToHost);
             std::cout << "Theoretecly data from " << i << " device." << std::endl;
