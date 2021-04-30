@@ -95,9 +95,11 @@ void lazzzyArrayPrint(float* arr, int arrSize)
 __global__ void _kernel(float* a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
-    int d = 0;
+    int d;
+    
       
     cudaGetDevice(&d);
+    cudaDeviceGetAttribute(&d, cudaDevAttrPciBusId , d);
     a[i] = a[i] + d;
 }
 
@@ -175,7 +177,10 @@ int main()
         {
             cudaSetDevice(i);
             cudaDeviceSynchronize();
-            printf("Kernel started\n");
+            int d;
+            cudaGetDevice(&d);
+
+            printf("Kernel %d started\n", d);
             _kernel <<<blocks, threads, 0, stream[i]>>> (dev_a[i]);
             //printf("Kernel stoped\n");
         }
