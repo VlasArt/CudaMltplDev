@@ -1,0 +1,68 @@
+Detcted device count: 4
+
+Device id: 0
+Device name: Tesla T4
+Device id: 1
+Device name: Tesla T4
+Device id: 2
+Device name: Tesla T4
+Device id: 3
+Device name: Tesla T4
+
+Array len: 256
+Array items:
+
+0.145468 0.820181 0.550399
+ ... 
+0.532415 0.127504 0.0499531
+ ... 
+0.504772 0.970179 0.0128979
+
+Kernel 0 started
+Kernel 1 started
+Kernel 2 started
+Kernel 3 started
+Theoretecly data from 0 device.
+
+Array len: 256
+Array items:
+
+0.145468 0.820181 0.550399
+ ... 
+0.532415 0.127504 0.0499531
+ ... 
+0.504772 0.970179 0.0128979
+
+Theoretecly data from 1 device.
+
+Array len: 256
+Array items:
+
+0.145468 0.820181 0.550399
+ ... 
+0.532415 0.127504 0.0499531
+ ... 
+0.504772 0.970179 0.0128979
+
+Theoretecly data from 2 device.
+
+Array len: 256
+Array items:
+
+0.145468 0.820181 0.550399
+ ... 
+0.532415 0.127504 0.0499531
+ ... 
+0.504772 0.970179 0.0128979
+
+Theoretecly data from 3 device.
+
+Array len: 256
+Array items:
+
+0.145468 0.820181 0.550399
+ ... 
+0.532415 0.127504 0.0499531
+ ... 
+0.504772 0.970179 0.0128979
+
