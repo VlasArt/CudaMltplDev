@@ -95,7 +95,10 @@ void lazzzyArrayPrint(float* arr, int arrSize)
 __global__ void _kernel(float* a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
-    a[i] = a[i]* a[i];
+    int d = 0;
+      
+    cudaGetDevice(&d);
+    a[i] = a[i] + d;
 }
 
 int main()
@@ -171,21 +174,24 @@ int main()
         for (int i = 0; i < num; i++)
         {
             cudaSetDevice(i);
+            cudaDeviceSynchronize();
             printf("Kernel started\n");
-            _kernel <<<blocks, threads >>> (dev_a[i]);
-            printf("Kernel stoped\n");
+            _kernel <<<blocks, threads, 0, stream[i]>>> (dev_a[i]);
+            //printf("Kernel stoped\n");
         }
     }
     catch (...) {
         return 3;
     }
 
-    // Подготовка и передач данных на карты
+    // получение данных обратно
     try {
         for (int i = 0; i < num; i++)
         {
-            cudaSetDevice(i);
+            cudaSetDevice(i);            
             cudaMemcpy(a, dev_a[i], arraySize * sizeof(float), cudaMemcpyDeviceToHost);
+            std::cout << "Theoretecly data from " << i << " device." << std::endl;
+            lazzzyArrayPrint(a, arraySize);
         }
     }
     catch (...) {
@@ -194,7 +200,7 @@ int main()
 
     cudaFree(dev_a);
 
-    lazzzyArrayPrint(a, arraySize);
+    //lazzzyArrayPrint(a, arraySize);
 
     // Убийство всех потоков
     if (!stream_dispose(stream))
